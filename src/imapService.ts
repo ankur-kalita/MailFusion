@@ -149,3 +149,101 @@ const startImapConnection = async (config: ImapConfig) => {
 export const startEmailSync = () => {
     imapConfigs.forEach(startImapConnection);
 };
+
+
+// import { connect, ImapSimple, ImapSimpleOptions } from 'imap-simple';
+// import dotenv from 'dotenv';
+
+// dotenv.config();
+
+// // Define IMAP configuration interface
+// interface ImapConfig {
+//     host: string;
+//     port: number;
+//     user: string;
+//     password: string;
+// }
+
+// // IMAP configurations for multiple accounts
+// const imapConfigs: ImapConfig[] = [
+//     {
+//         host: process.env.IMAP_HOST1!,
+//         port: parseInt(process.env.IMAP_PORT1!),
+//         user: process.env.IMAP_USER1!,
+//         password: process.env.IMAP_PASS1!,
+//     },
+//     {
+//         host: process.env.IMAP_HOST2!,
+//         port: parseInt(process.env.IMAP_PORT2!),
+//         user: process.env.IMAP_USER2!,
+//         password: process.env.IMAP_PASS2!,
+//     },
+// ];
+
+// // Function to fetch emails from IMAP
+// const fetchEmails = async (imap: ImapSimple, lastNDays = 30) => {
+//     const sinceDate = new Date();
+//     sinceDate.setDate(sinceDate.getDate() - lastNDays);
+
+//     try {
+//         // Define search criteria and fetch options
+//         const searchCriteria = [['SINCE', sinceDate.toUTCString()]];
+//         const fetchOptions = {
+//             bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
+//             struct: true,
+//         };
+
+//         // Search for emails
+//         const results = await imap.search(searchCriteria, fetchOptions);
+//         console.log(`Fetched ${results.length} emails from last ${lastNDays} days.`);
+
+//         // Log email headers
+//         for (const res of results) {
+//             const header = res.parts[0].body;
+//             console.log(`From: ${header.from}, Subject: ${header.subject}`);
+//         }
+//     } catch (error) {
+//         console.error('Error fetching emails:', error);
+//     }
+// };
+
+// // Function to establish IMAP connection
+// const startImapConnection = async (config: ImapConfig) => {
+//     const imapOptions: ImapSimpleOptions = {
+//         imap: {
+//             user: config.user,
+//             password: config.password,
+//             host: config.host,
+//             port: config.port,
+//             tls: true,
+//             authTimeout: 10000,
+//         },
+//     };
+
+//     try {
+//         // Connect to IMAP server
+//         const imap = await connect(imapOptions);
+//         await imap.openBox('INBOX');
+
+//         console.log(`Connected to IMAP: ${config.user}`);
+
+//         // Fetch emails initially
+//         await fetchEmails(imap);
+
+//         // Listen for new emails
+//         imap.on('mail', async () => {
+//             console.log(`New email received in ${config.user}`);
+//             await fetchEmails(imap, 1);
+//         });
+
+//         // Handle IMAP errors
+//         imap.on('error', (err) => console.error(`IMAP Error: ${err.message}`));
+//     } catch (error) {
+//         console.error(`Failed to connect to IMAP (${config.user}):`, error);
+//     }
+// };
+
+// // Function to start email synchronization
+// export const startEmailSync = () => {
+//     imapConfigs.forEach(startImapConnection);
+// };
